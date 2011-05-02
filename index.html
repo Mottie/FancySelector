@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>FancySelector Demo</title>
+
+<!-- jQuery -->
+<script type="text/javascript" src="file:///D:/My%20Documents/Working/jquery-1.5.js"></script>
+<!--
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+-->
+
+<!-- optional -->
+<script src="js/jquery.mousewheel.js" type="text/javascript"></script>
+<script src="js/jquery.easing.1.2.js" type="text/javascript"></script>
+
+<!-- Fancy Selector -->
+<link rel="stylesheet" href="css/fancyselector-fancy.css" type="text/css" >
+<script src="js/jquery.fancyselector.js" type="text/javascript"></script>
+
+<!-- demo -->
+<link rel="stylesheet" href="css/demo.css" type="text/css" >
+<style type="text/css">
+/* change the below css class to an id - "#wrapper", to shrink the FancySelector size from full screen */
+.wrapper {
+	width: 650px;
+	height: 500px;
+	margin: 0 auto;
+	border: #444 1px solid;
+}
+</style>
+<script type="text/javascript">
+$(document).ready(function(){
+
+	// Report Events to console
+	$('#main').bind('initialized.fancyselector changed.fancyselector submitted.fancyselector', function(e, sel){
+		var txt = e.type +  ': ' + sel.getSelections().join(',');
+		if (window.console && window.console.firebug){ console.debug(txt); } // added window.console.firebug to make this work in Opera
+	});
+
+	// initialize the plugin
+	$('#main').fancySelector({
+		start : 'One Love', // Starting option to highlight & center vertically - can be a jQuery object of the option, zero-based index, text or value
+		resizable: true     // only used if the FancySelector wrapper is resizable (the entire window in this case)
+	});
+
+	// Because this demo fills the entire window and the ".fancyselectorwrapper" has
+	// a height set to 100% in the css, which doesn't change on window resize, we need
+	// to manually resize the wrapper height on window resize
+	function fsResize(){
+		$('.fancyselectorwrapper').height( $(window).height() );
+	}
+	fsResize();
+	$(window).resize(fsResize).trigger('resize');
+
+});
+</script>
+
+</head>
+<body>
+
+<div id="links">
+	<h2>FancySelector</h2>
+	<a href="http://github.com/Mottie/FancySelector/downloads">Download</a><br>
+	<a href="https://github.com/Mottie/FancySelector/wiki">Documentation</a><br>
+	<a href="index2.html">Demo #2</a>
+</div>
+
+<div id="wrapper">
+<select id="main" multiple>
+	<option>One Life</option>
+	<option>One Emotion</option>
+	<option>One Feeling</option>
+	<option>One Regret</option>
+	<option>One Desire</option>
+	<option>One Love</option>
+	<option>One Heart</option>
+	<option>One Moment</option>
+	<option>One Past</option>
+	<option>One Future</option>
+	<option>One Time</option>
+	<option>One Day</option>
+	<option>One Hour</option>
+	<option>One Minute</option>
+	<option>One Second</option>
+	<option>One Sound</option>
+	<option>One Note</option>
+	<option>One Song</option>
+	<option>One Symphony</option>
+	<option>One Sight</option>
+	<option>One Shape</option>
+	<option>One Smile</option>
+	<option>One Smell</option>
+	<option>One Touch</option>
+	<option>One Taste</option>
+	<option>One Chance</option>
+	<option>One Problem</option>
+	<option>One Answer</option>
+	<option>One Death</option>
+	<option>One World</option>
+</select>
+</div>
+
+</body></html>

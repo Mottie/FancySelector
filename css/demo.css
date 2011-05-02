@@ -1,0 +1,41 @@
+/* FancySelector Demo CSS */
+
+body { color: #ddd; background: #222; margin: 0; padding: 0; }
+a:link { color: #ddd; text-decoration: none; cursor: pointer; }
+a:hover { color: #fff; }
+a:visited,a:active { color: #39f; }
+
+h2 { margin: 0; }
+
+/* download link */
+#links {
+	position: fixed;
+	top: 10px;
+	left: 10px;
+	z-index: 100;
+	width: 150px;
+	height: 90px;
+	padding: 8px;
+	background: #444;
+}
+
+/* Second demo - index2.html */
+.demo2 { margin: 0 160px; }
+
+.demo2 #links {
+	right: 180px;
+	left: auto;
+	top: 20px;
+	width: 120px;
+	height: 60px;
+}
+
+.spacer { height: 40px; }
+
+#form1 { margin: 0 100px; }
+
+.wrap1, .wrap2 {
+	display: inline-block;
+	width: 150px;
+	height: 1.1em;
+}

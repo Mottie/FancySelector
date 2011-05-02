@@ -1,0 +1,80 @@
+/*
+	FancySelector - Regular theme ( no background image, fade or font )
+	http://github.com/Mottie/FancySelector
+	by Rob Garrison (aka Mottie)
+*/
+
+/* Applied to whatever wraps fancyselector (option wrapper), if
+   it is the page body you may want to change this */
+.fancyselectorwrapper {
+	display: block;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	position: relative;
+}
+
+.fancyselectorexpanded {
+	display: block;
+	width: 100%;
+	height: 100%;
+	position: relative;
+	background: #222;
+	border: #444 1px solid;
+}
+
+/* Hide the actual selector, but don't use display: none or
+   visibility: hidden or the keyboard navigation won't work */
+.fancyselectorselect {
+	position: absolute;
+	top: 0;
+	left : -99999px;
+}
+
+/* fancyselector - option wrapper */
+.fancyselector {
+	position: relative;
+}
+
+/* General fancyselector option style */
+.fancyselector div {
+	display: block;
+	font: 18px;
+	text-align: center;
+	cursor: pointer;
+	color: #999;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+
+/* ***Selected*** options, focused only exists when option has focus */
+.fancyselector div.selected, .fancyselector div.selected.highlight {
+	background-color: #36d;
+	color: #ddd;
+}
+.fancyselector.focused div.selected, .fancyselector.focused div.selected.highlight {
+	background-color: #39f;
+	color: #fff;
+}
+
+/* ***Highlighted*** option, focused only exists when option has focus */
+.fancyselector div.highlight {
+	background-color: #333;
+	color: #ddd;
+}
+.fancyselector.focused div.highlight {
+	background-color: #444;
+	color: #fff;
+}
+
+/* ***Disabled*** options */
+/* IE ignores the text color and adds a shadow when the element has a "disabled" attirbute */
+.fancyselector div.disabled, .fancyselector div.disabled.highlight, .fancyselector div.disabled.selected {
+	background-color: #400;
+	color: #ddd;
+	opacity: 0.85;
+	filter: alpha(opacity=85);
+}

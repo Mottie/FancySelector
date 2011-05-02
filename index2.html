@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>FancySelector Demo 2</title>
+
+<!-- jQuery -->
+<script type="text/javascript" src="file:///D:/My%20Documents/Working/jquery-1.5.js"></script>
+<!--
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+-->
+
+<!-- optional -->
+<script src="js/jquery.mousewheel.js" type="text/javascript"></script>
+<script src="js/jquery.easing.1.2.js" type="text/javascript"></script>
+
+<!-- Fancy Selector -->
+<link rel="stylesheet" href="css/fancyselector-plain.css" type="text/css" >
+<script src="js/jquery.fancyselector.js" type="text/javascript"></script>
+
+<!-- demo -->
+<link rel="stylesheet" href="css/demo.css" type="text/css" >
+<script type="text/javascript">
+$(document).ready(function(){
+
+	// Get the current month & year
+	var yr, y, m, d = new Date(); // assuming the date is May 2011 in the comments below
+
+	// Set the "start" option with (order of priority):
+	//  * zero-based index of the option
+	//  * jQuery object of the option
+	//  * option text (text to match; case sensitive)
+	//  * option value, if the value = number, then wrap it in quotes "1" to make the script look for it as a value instead of using it as the zero-based index
+
+	// d.getMonth() returns 4 (or May) ... index # + 1 (4+1) because the first option isn't a month
+	// we still need to set the selected option prior to starting the script
+	m = $('#month').find('option[value=' + (d.getMonth() + 1) + ']').attr('selected', true).text();
+
+	// initialize the plugin on the month selector
+	$('#month').fancySelector({
+	 max    : 1,   // Only one selection allowed
+	 start  : m,   // start: "May" or use start : d.getMonth() + 1 (zero-based index)
+	 expand : true // expand selector window when it gets focus (used to expand small selectors)
+	});
+
+	yr = $('#year').find('option');
+	// Set the "start" option using a jQuery object of the option
+	y = yr.filter('option:contains(' + d.getFullYear() + ')').attr('selected',true);
+	// disable older years
+	yr.filter(':lt(' + yr.index(y) + ')').attr('disabled', 'disabled');
+
+	// initialize the plugin on the year selector
+	$('#year').fancySelector({
+	 max        : 1,     // Only one selection allowed
+	 start      : y,     // start: jQuery object of option
+	 keepInView : false, // Don't keep selected year in view when select is blurred (default is true)
+	 expand     : true   // expand selector window when it gets focus (used to expand small selectors)
+	}); 
+
+});
+</script>
+
+</head><body class="demo2">
+
+<div class="spacer"></div>
+<h1>FancySelector Demo</h1>
+
+<div id="links">
+<a href="http://github.com/Mottie/FancySelector/downloads">Download</a><br>
+<a href="https://github.com/Mottie/FancySelector/wiki">Documentation</a><br>
+<a href="index.html">Demo #1</a>
+</div>
+
+
+<div >
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sed mauris eget justo mollis placerat in ac erat. Vestibulum tempor sagittis risus at euismod. Nullam a orci nec lacus adipiscing tempus. Fusce luctus magna id odio mattis sed elementum urna lacinia. Donec turpis odio, ornare sit amet dignissim vitae, iaculis quis sem. In hac habitasse platea dictumst. Aliquam nec nulla vel lectus semper dignissim. Vestibulum tincidunt, sem vitae eleifend pretium, nunc sapien fringilla turpis, at porttitor tellus nisl posuere felis. Nullam luctus libero in sem dignissim ultricies. Maecenas et elit nunc, a vestibulum dui. Sed ut risus augue. Curabitur pellentesque aliquam massa. In tortor diam, posuere a tempor molestie, dictum sit amet nisi. Ut vel turpis mauris. Vestibulum sagittis pretium sollicitudin. Cras id massa vel urna congue lacinia sed sed felis. Integer mauris neque, facilisis id interdum nec, consectetur vitae elit. </p>
+<form id="form1" action="">
+	Select Date:
+	<span class="wrap1">
+		<select id="month">
+			<option disabled>-= Choose a month =-</option>
+			<option value="1">January</option>
+			<option value="2">Feburary</option>
+			<option value="3">March</option>
+			<option value="4">April</option>
+			<option value="5">May</option>
+			<option value="6">June</option>
+			<option value="7">July</option>
+			<option value="8">August</option>
+			<option value="9">September</option>
+			<option value="10">October</option>
+			<option value="11">November</option>
+			<option value="12">December</option>
+		</select>
+	</span>
+
+	<span class="wrap2">
+		<select id="year">
+			<option>-= Choose a year =-</option>
+			<option>2010</option>
+			<option>2011</option>
+			<option>2012</option>
+			<option>2013</option>
+			<option>2014</option>
+			<option>2015</option>
+			<option>2016</option>
+			<option>2017</option>
+			<option>2018</option>
+			<option>2019</option>
+			<option>2020</option>
+			<option>2021</option>
+			<option>2022</option>
+		</select>
+	</span>
+
+</form>
+<p>Aliquam erat volutpat. Ut et mauris a mi rutrum tempor a nec turpis. Mauris ac turpis dolor, vel varius lorem. Quisque vestibulum rutrum mollis. Sed nisi dui, egestas id volutpat id, ullamcorper et quam. Proin diam quam, gravida vel eleifend quis, viverra id augue. Integer purus sem, accumsan eget semper a, dignissim ullamcorper nisi. Proin a porta odio. Ut eu libero consectetur est dictum convallis. Donec ac neque ac purus sollicitudin aliquam. Vivamus dictum dignissim purus vel semper. Vivamus in velit elit. </p>
+
+</div>
+
+</body></html>
