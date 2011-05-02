@@ -25,7 +25,7 @@
 
 ###Documentation
 
-* Wiki Pages: [Home][3] | [FAQ][4] | [Setup][5] | [Usage][6] | [Events][7] | [Change][8]
+* Wiki Pages: [Home][3] | [FAQ][4] | [Setup][5] | [Options][6] | [Usage][7] | [Events][8] | [Change][9]
 
 ###Licensing
 
@@ -45,8 +45,9 @@ Only the latest changes will be shown below, see the wiki change log to view old
   [3]: https://github.com/Mottie/FancySelector/wiki
   [4]: https://github.com/Mottie/FancySelector/wiki/FAQ
   [5]: https://github.com/Mottie/FancySelector/wiki/Setup
-  [6]: https://github.com/Mottie/FancySelector/wiki/Usage
-  [7]: https://github.com/Mottie/FancySelector/wiki/Events
-  [8]: https://github.com/Mottie/FancySelector/wiki/Change
-  [9]: http://www.opensource.org/licenses/mit-license.php
-  [10]: http://creativecommons.org/licenses/by/3.0/
+  [6]: https://github.com/Mottie/FancySelector/wiki/Options
+  [7]: https://github.com/Mottie/FancySelector/wiki/Usage
+  [8]: https://github.com/Mottie/FancySelector/wiki/Events
+  [9]: https://github.com/Mottie/FancySelector/wiki/Change
+  [10]: http://www.opensource.org/licenses/mit-license.php
+  [11]: http://creativecommons.org/licenses/by/3.0/
