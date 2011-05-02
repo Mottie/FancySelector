@@ -329,12 +329,16 @@ $.fancySelector = function(el, options){
 	base.destroy = function(){
 		base.$box.remove();
 		var t = { size : base.originalSize };
-		if (base.originalMultiple !== false && typeof base.originalMultiple !== 'undefined') { t.multiple = true; }
+		if (base.originalMultiple !== false && typeof base.originalMultiple !== 'undefined') {
+			t.multiple = true;
+		} else {
+			base.$el.removeAttr('multiple');
+		}
 		base.$el
 			.removeClass('fancyselectorselect')
-			.attr(t)
 			.removeAttr('aria-hidden')
 			.removeAttr('role')
+			.attr(t)
 			.unbind('keydown.fancyselector keypress.fancyselector focus.fancyselector blur.fancyselector mousewheel.fancyselector initialized.fancyselector changed.fancyselector submitted.fancyselector focused.fancyselector blurred.fancyselector')
 			.removeData('fancySelector')
 			.unwrap()
@@ -363,15 +367,8 @@ $.fancySelector.defaultOptions = {
 	report           : 'text',  // Tied to the $.fancySelector.returnedOptions function: use "text", "value", "index" or custom function
 
 	// classes used - modify the css to match these names
-	selected         : 'selected',   // selected class name
-	highlight        : 'highlight',  // highlighted class name
-
-	// callbacks
-	initialized      : null,    // FancySelector initialized callback
-	focused          : null,    // triggered on focus
-	changed          : null,    // change callback
-	submitted        : null,    // submit callback, called when user presses enter when select has focus
-	blurred          : null     // triggered when FancySelector is no longer focused
+	selected         : 'selected', // selected class name
+	highlight        : 'highlight' // highlighted class name
 };
 
 // Functions that return a desired attribute/text from options - left side matches "report" option string
