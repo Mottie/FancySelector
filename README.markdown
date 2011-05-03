@@ -41,6 +41,7 @@ Only the latest changes will be shown below, see the wiki change log to view old
 
 * Added mouse double click to toggle selection.
 * Added a method to allow updating the selector. Use it as follows:
+
 ```javascript
 // Update FancySelector - No options required.
 $('.selector').fancySelector();
