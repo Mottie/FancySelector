@@ -33,9 +33,9 @@ $(document).ready(function(){
 
 	// initialize the plugin on the month selector
 	$('#month').fancySelector({
-	 max    : 1,   // Only one selection allowed
-	 start  : m,   // start: "May" or use start : d.getMonth() + 1 (zero-based index)
-	 expand : true // expand selector window when it gets focus (used to expand small selectors)
+		max    : 1,   // Only one selection allowed
+		start  : m,   // start: d.getMonth() + 1 (zero-based index), or use start : "May"
+		expand : true // expand selector window when it gets focus (used to expand small selectors)
 	});
 
 	yr = $('#year').find('option');

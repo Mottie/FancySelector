@@ -7,19 +7,48 @@ a:visited,a:active { color: #39f; }
 
 h2 { margin: 0; }
 
-/* download link */
+/* download link/info box */
 #links {
 	position: fixed;
 	top: 10px;
-	left: 10px;
+	left: 0;
 	z-index: 100;
-	width: 150px;
-	height: 90px;
+	width: 180px;
+	height: auto;
 	padding: 8px;
 	background: #444;
+	border-radius: 0 15px 15px 0;
 }
 
-/* Second demo - index2.html */
+/* hide button */
+#links a.hide {
+	float: right;
+	margin-right: 15px;
+}
+
+#links hr {
+	margin-left: 0;
+	width: 80%;
+}
+
+/* event info */
+#links ul {
+	width: 170px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+#links li {
+	margin: 0;
+	padding-left: 5px;
+}
+#links li span {
+	text-transform: capitalize;
+	color: #7a7;
+}
+
+/* Second demo - index2.html 
+  ***************************/
 .demo2 { margin: 0 160px; }
 
 .demo2 #links {
@@ -28,6 +57,8 @@ h2 { margin: 0; }
 	top: 20px;
 	width: 120px;
 	height: 60px;
+	border-radius: 15px;
+	padding: 10px 20px;
 }
 
 .spacer { height: 40px; }

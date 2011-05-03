@@ -1,5 +1,5 @@
 /*
- * FancySelector v1.0 beta
+ * FancySelector v1.0.1 beta
  * By Rob Garrison (aka Mottie & Fudgey)
  * Dual licensed under the MIT and GPL licenses.
  *
@@ -11,10 +11,9 @@ $.fancySelector = function(el, options){
 	var base = this;
 	base.el = el;
 	base.$el = $(el).addClass('fancyselectorselect'); // select
-	base.$options = base.$el.find('option'); // options
 	base.$returnedOptions = $.fancySelector.returnedOptions;
 
-	// restored on destroy
+	// Attributes to restore on destroy
 	base.originalSize = base.$el.attr('size');
 	base.originalMultiple = base.$el.attr('multiple');
 
@@ -22,41 +21,18 @@ $.fancySelector = function(el, options){
 	base.$el.data('FancySelector', base);
 
 	base.init = function(){
-		var o, t; // temp variable
+		var o, t; // temp variables
 		base.options = $.extend({},$.fancySelector.defaultOptions, options);
 
 		base.selectedOptions = '';
 		base.$viewport = base.$el.wrap('<div class="fancyselectorwrapper" />').parent();
 
-		// build fancy selector, unselectable attribute needed for older IE
+		// build fancy selector
 		base.$box = $('<div class="fancyselector"></div>')
 			.attr( 'role', 'listbox' )
 			.css( 'top', -base.vpHeight );
-		base.$options.each(function(i){
-			o = (base.el.options[i].selected) ? base.options.selected : '';
-			o += ($(this).is(':disabled')) ? ' disabled" aria-disabled="true" disabled="true"' : '"';
-			t = $('<div class="' + o + ' unselectable="on" role="option"></div>');
-			t.attr( 'data-value', $(this).val() ); // in case of quotes
-			t.html( $(this).html() );
-			base.$box.append(t);
-		});
-		base.$el
-			// make hidden select the same height as base.options.page size - attempt to keep navigation consistent
-			.attr({ 'size' : base.options.page + 1, 'aria-hidden' : true })
-			.after(base.$box);
 
-		// update multiple selector attribute
-		if (base.options.max === 1) {
-			base.options.multiple = false;
-		}
-		if (base.options.multiple){
-			base.$el.attr('multiple', 'multiple');
-		} else {
-			base.$el.removeAttr('multiple');
-		}
-
-		base.$divs = base.$box.find('div');
-		base.listLength = base.$divs.length - 1;
+		base.update();
 
 		// set starting hilighted option
 		t = base.options.start;
@@ -67,10 +43,11 @@ $.fancySelector = function(el, options){
 		if (typeof t === 'string') { t = base.$divs.filter(':contains(' + t + ')') || base.$divs.filter('[data-value=' + t + ']') || 0; }
 		// if start contains a jQuery object, then find the index and use it
 		base.index = ($.fn.isPrototypeOf(t)) ? base.$divs.index(t) : t;
+
 		base.highlight(true);
 
 		// Mouse interaction
-		base.$divs.click(function(e){
+		base.$box.delegate('.fancyselectoroption', 'click', function(e){
 			// shift-click toggles selection between current and clicked option
 			if (e.shiftKey) {
 				base.setSelection();
@@ -92,6 +69,8 @@ $.fancySelector = function(el, options){
 				// ctrl-click toggle option - simulate how it works in a real select
 				if (e.ctrlKey) { base.setSelection(); }
 			}
+		}).delegate('.fancyselectoroption', 'dblclick', function(){
+			base.setSelection();
 		});
 
 		// Add mousewheel functionality, if mousewheel plugin exists
@@ -116,6 +95,16 @@ $.fancySelector = function(el, options){
 				base.timerFocus = setTimeout(function(){
 					if (base.$box.is('.focused')) { return; }
 					base.$box.addClass('focused');
+					// expand selection box
+					if (base.options.expand) {
+						o = base.$viewport.height();
+						t = o * base.options.page; // make expanded box taller by 1 page (5x by default)
+						base.$viewport
+							.wrap('<div class="fancyselectorexpanded" />')
+							.css({ position: 'absolute', height: t, top: 0 }) // tried fancy animations, but this works better
+							.parent().css({ height : t, top: -t/2 + o/2 });
+						base.highlight();
+					}
 					base.$el.trigger('focused.fancyselector', base);
 				}, 200);
 			})
@@ -125,34 +114,20 @@ $.fancySelector = function(el, options){
 				base.blurTimer = setTimeout(function(){
 					base.$box.removeClass('focused');
 					base.getSelections(null, false); // update actual select box, x should be undefined
+					// if single option is selectable, show selected option when blurred
+					if (base.options.keepInView && !base.options.multiple) {
+						base.index = base.el.selectedIndex;
+						base.highlight(true);
+					}
+					// remove expanded selection box
+					if (base.options.expand) {
+						base.$viewport
+							.removeAttr('style')
+							.unwrap();
+						base.highlight(true);
+					}
 					base.$el.trigger('blurred.fancyselector', base);
 				}, 200);
-			})
-			.bind('focused.fancyselector', function(){
-				// expand selection box
-				if (base.options.expand) {
-					o = base.$viewport.height();
-					t = o * base.options.page; // make expanded box taller by 1 page (5x by default)
-					base.$viewport
-						.wrap('<div class="fancyselectorexpanded" />')
-						.css({ position: 'absolute', height: t, top: 0 }) // tried fancy animations, but this works better
-						.parent().css({ height : t, top: -t/2 + o/2 });
-					base.highlight();
-				}
-			})
-			.bind('blurred.fancyselector', function(){
-				// if single option is selectable, show selected option when blurred
-				if (base.options.keepInView && !base.options.multiple) {
-					base.index = base.el.selectedIndex;
-					base.highlight(true);
-				}
-				// remove expanded selection box
-				if (base.options.expand) {
-					base.$viewport
-						.removeAttr('style')
-						.unwrap();
-					base.highlight(true);
-				}
 			});
 
 		// Binds events/callbacks
@@ -164,12 +139,66 @@ $.fancySelector = function(el, options){
 		});
 
 		// Find new center on window resize
-		if (base.options.resizable) { $(window).resize(base.highlight); }
+		$(window).resize(base.highlight);
 
 		base.initialized = true;
 		base.$el.trigger('initialized.fancyselector', base);
 
 	}; // end base.init
+
+	// Update options
+	base.update = function(){
+		var o, t; // temp variables
+		// update original select with previous selections
+		if (base.initialized) {
+			base.getSelections(); // ensure original select has current selections
+			/*
+			// Leaving this script in, just in case there is a problem with selections not updating correctly
+			// e.g. original select options removed before updating
+			base.el.selectedIndex = -1; // clear original select
+			// map an array of all selection's innerHTML from FancySelector
+			o = base.$divs.filter('.' + base.options.selected).map(function(){ return this.innerHTML });
+			base.$el.find('option').each(function(i){
+				// compare FancySelector HTML to original option HTML, if found set original option as selected
+				if ($.inArray( this.innerHTML, o) >= 0) {
+					this.selected = true;
+				}
+			});
+			*/
+		}
+		base.$box.empty();
+		base.$options = base.$el.find('option').each(function(i){
+			o = (base.el.options[i].selected) ? base.options.selected : '';
+			o += ($(this).is(':disabled')) ? ' disabled" aria-disabled="true" disabled="true' : '';
+			// unselectable attribute needed for older IE, all others use "user-select: none" set in the css
+			t = $('<div class="fancyselectoroption ' + o + '" unselectable="on" role="option"></div>');
+			t.attr( 'data-value', $(this).val() ); // in case of quotes
+			t.html( $(this).html() );
+			base.$box.append(t);
+		});
+		// make hidden select the same height as base.options.page size - attempt to keep navigation consistent
+		base.$el.attr({ 'size' : base.options.page + 1, 'aria-hidden' : true });
+		base.$viewport.append(base.$box);
+
+		// update multiple selector attribute
+		if (base.options.max === 1) {
+			base.options.multiple = false;
+		}
+		if (base.options.multiple){
+			base.$el.attr('multiple', 'multiple');
+		} else {
+			base.$el.removeAttr('multiple');
+		}
+
+		base.$divs = base.$box.find('div');
+		base.listLength = base.$divs.length - 1;
+
+		if (base.initialized) {
+			base.highlight(true);
+			base.$el.trigger('changed.fancyselector', base);
+		}
+
+	};
 
 	// Check key pressed
 	base.checkKey = function(e){
@@ -295,9 +324,10 @@ $.fancySelector = function(el, options){
 		if (typeof report === 'undefined' || report === null) { report = base.options.report; }
 		base.el.selectedIndex = -1; // clear selections, updated below
 		base.selectedOptions = d.map(function(){
-			var i = base.$divs.index(this);
-			base.el.options[i].selected = true; // update original selector
-			return base.$returnedOptions[report](base, i);
+			var i = base.$divs.index(this),
+				o = base.el.options[i]; // check to make sure option exists (in case the update removes options)
+			if (o) { base.el.options[i].selected = true; } // update original selector
+			return (o) ? base.$returnedOptions[report](base, i) : false;
 		}).get();
 		if (base.initialized && internal) { base.$el.trigger('submitted.fancyselector', [base, base.selectedOptions]); }
 		// return string containing text from selected options
@@ -312,7 +342,7 @@ $.fancySelector = function(el, options){
 			for (j=0; j < base.listLength; j++){
 				base.el.options[j].selected = (base.el.options[j].disabled) ? false : true;
 			}
-			if (base.options.resizable) { base.highlight(); }
+			base.highlight();
 			if (base.initialized) { base.$el.trigger('changed.fancyselector', base); }
 		}
 	};
@@ -321,7 +351,7 @@ $.fancySelector = function(el, options){
 	base.unselectAll = function(){
 		base.$divs.not('.disabled').removeClass(base.options.selected);
 		base.el.selectedIndex = -1;
-		if (base.options.resizable) { base.highlight(); }
+		base.highlight();
 		if (base.initialized) { base.$el.trigger('changed.fancyselector', base); }
 	};
 
@@ -356,11 +386,10 @@ $.fancySelector.defaultOptions = {
 	wrap             : true,    // Wrap list (FF or Rewind) at ends if true; when using arrow keys only
 	time             : 500,     // animation time in milliseconds
 	easing           : 'swing', // Include easing plugin or jQuery UI if anything other than "swing" or "linear"
-	resizable        : false,   // Set to true if the fancySelector is resizable (e.g. full screen like the demo)
 	expand           : false,   // selection will expand when focused, set this to true only if the fancyselector is small
 
 	// selections
-	includeHighlight : true,    // include highlighted selection on submit; will not include highlight if max # of options already set
+	includeHighlight : false,   // include highlighted selection on submit; will not include highlight if max # of options already set
 	multiple         : true,    // allow multiple selections
 	keepInView       : true,    // keeps selected option in view after select has been blurred
 	max              : false,   // Maximum number of selections, set to "false" (no quotes) to disable max
@@ -384,9 +413,28 @@ $.fancySelector.returnedOptions = {
 };
 
 // initialize plugin
-$.fn.fancySelector = function(options){
+$.fn.fancySelector = function(options, bool){
 	return this.each(function(){
-		(new $.fancySelector(this, options));
+		var n, fs = $(this).data('FancySelector');
+		// initialize, but prevent multiple initializations
+		if ((typeof(options)).match('object|undefined')){
+			if (!fs) {
+				(new $.fancySelector(this, options));
+			} else {
+				fs.update();
+			}
+		// If options is a number, process as an external link to option #: $(element).fancySelector(#)
+		} else if (/\d/.test(options) && !isNaN(options) && fs) {
+			n = (typeof(options) === "number") ? options : parseInt($.trim(options),10); // accepts "  2  "
+			// ignore out of bound pages
+			if ( n >= 0 && n <= fs.listLength ) {
+				fs.index = n;
+				if (typeof bool === 'boolean') {
+					fs.setSelection(n, bool);
+				}
+				fs.highlight(); // highlight option
+			}
+		}
 	});
 };
 

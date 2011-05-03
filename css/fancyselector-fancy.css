@@ -54,7 +54,10 @@
 	background-color: #36d;
 	color: #ddd;
 }
-.fancyselector.focused div.selected, .fancyselector.focused div.selected.highlight {
+.fancyselector.focused div.selected {
+	background-color: #36d;
+}
+.fancyselector.focused div.selected.highlight {
 	background-color: #39f;
 	color: #fff;
 }

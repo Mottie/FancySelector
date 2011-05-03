@@ -6,7 +6,8 @@
  * Move up - up & left arrow, page up & mousewheel.
  * To Start - Home
  * To End - End
-* Change selections using mouse or keyboard:
+* Change selections using the mouse or keyboard:
+ * Mouse `double-click` - toggle selection.
  * Mouse `Control + click` - toggle selection.
  * Mouse `Shift + click` - toggle selections between current position and clicked selection.
  * `Space` - toggle selection of highlighted option.
@@ -36,7 +37,33 @@
 
 Only the latest changes will be shown below, see the wiki change log to view older versions.
 
-####Version 1.0 beta (5/2/2011)
+###Version 1.0.1 beta (5/3/2011)
+
+* Added mouse double click to toggle selection.
+* Added a method to allow updating the selector. Use it as follows:
+```javascript
+// Update FancySelector - No options required.
+$('.selector').fancySelector();
+```
+
+* Changed `includeHighlight` option to be `false` by default.
+* Updated the main demo:
+ * Window resize script is no longer required for a full screen FancySelector. It now uses the proper CSS to keep the height at 100%.
+ * Info box updated to show triggered events & made hideable.
+* Added shortcut methods to change a selection and/or move the highlight.
+
+```javascript
+// Highlight fourth option (zero-based index).
+$('.selector').fancySelector(3);
+
+// Select and highlight third option (zero-based index).
+$('.selector').fancySelector(2, true);
+
+// Unselect and highlight third option (zero-based index).
+$('.selector').fancySelector(2, false);
+```
+
+###Version 1.0 beta (5/2/2011)
 
 * Posted on Github
 

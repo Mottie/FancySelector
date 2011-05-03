@@ -16,37 +16,52 @@
 <!-- demo -->
 <link rel="stylesheet" href="css/demo.css" type="text/css" >
 <style type="text/css">
-/* change the below css class to an id - "#wrapper", to shrink the FancySelector size from full screen */
-.wrapper {
-	width: 650px;
-	height: 500px;
-	margin: 0 auto;
-	border: #444 1px solid;
+/* "#wrapper" is set up to fill the entire browser window */
+#wrapper {
+	display: block;
+	position: absolute;
+	height: auto;
+	bottom: 0;
+	top: 0;
+	left: 0;
+	right: 0;
+	margin: 10px;
 }
 </style>
 <script type="text/javascript">
 $(document).ready(function(){
 
-	// Report Events to console
-	$('#main').bind('initialized.fancyselector changed.fancyselector submitted.fancyselector', function(e, sel){
-		var txt = e.type +  ': ' + sel.getSelections().join(',');
-		if (window.console && window.console.firebug){ console.debug(txt); } // added window.console.firebug to make this work in Opera
+	// Report Events to info window
+	// ****************************
+	var d = $('#display'),
+	// make it hideable with animation
+	display = function(t){
+		$('#links').animate({ left: (t) ? 0 : -180 }, 500);
+	};
+	// hide/show display window
+	$('#links').click(function(){
+		if ($(this).position().left === 0) { return; }
+		display(true);
+	}).find('.hide').click(function(){
+		display(false);
+		return false;
+	});
+
+	// Bind to FancySelector events (include ".fancyselector" namespace)
+	// ****************************
+	$('#main').bind('initialized.fancyselector changed.fancyselector submitted.fancyselector', function(e, fsel){
+		var txt = fsel.getSelections('text').join(', '); // change 'text' to 'index' to display the zero-based index
+		// update display
+		d.append('<li><span>' + e.type +  '</span>: ' + txt + '</li>');
+		// remove old event info
+		if (d.find('li').length > 3) { d.find('li:first').remove(); }
 	});
 
 	// initialize the plugin
+	// ****************************
 	$('#main').fancySelector({
-		start : 'One Love', // Starting option to highlight & center vertically - can be a jQuery object of the option, zero-based index, text or value
-		resizable: true     // only used if the FancySelector wrapper is resizable (the entire window in this case)
+		start : 'One Love' // Starting option to highlight & center vertically - can be a jQuery object of the option, zero-based index, text or value
 	});
-
-	// Because this demo fills the entire window and the ".fancyselectorwrapper" has
-	// a height set to 100% in the css, which doesn't change on window resize, we need
-	// to manually resize the wrapper height on window resize
-	function fsResize(){
-		$('.fancyselectorwrapper').height( $(window).height() );
-	}
-	fsResize();
-	$(window).resize(fsResize).trigger('resize');
 
 });
 </script>
@@ -55,10 +70,15 @@ $(document).ready(function(){
 <body>
 
 <div id="links">
+	<a href="#" class="hide">x</a>
 	<h2>FancySelector</h2>
 	<a href="http://github.com/Mottie/FancySelector/downloads">Download</a><br>
 	<a href="https://github.com/Mottie/FancySelector/wiki">Documentation</a><br>
 	<a href="index2.html">Demo #2</a>
+	<hr>
+	Events:
+	<ul id="display"></ul>
+
 </div>
 
 <div id="wrapper">
